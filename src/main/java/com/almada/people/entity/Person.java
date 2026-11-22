@@ -18,13 +18,13 @@ public class Person {
     @Setter(AccessLevel.NONE)
     private long id;
 
-    @Column(name = "id", nullable = false, unique = true)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @Column(name = "id", nullable = false, unique = true)
+    @Column(name = "cpf", nullable = false, unique = true)
     private String cpf;
 
-    @Column(name = "id", nullable = false, unique = true)
+    @Column(name = "age", nullable = false, unique = true)
     private Integer age;
 
     @Builder

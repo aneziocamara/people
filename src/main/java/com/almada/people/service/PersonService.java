@@ -12,13 +12,9 @@ public interface PersonService {
 
     List<PersonResponseDTO> findAll();
 
-    PersonResponseDTO register(PersonRequestDTO personRequestDTO);
+    PersonResponseDTO register(PersonRequestDTO personDTO);
 
-    PersonResponseDTO register(PersonResponseDTO personResponseDTO);
-
-    PersonResponseDTO update(PersonRequestDTO personRequestDTO, Long id);
-
-    PersonResponseDTO update(PersonRequestDTO personRequestDTO);
+    PersonResponseDTO update(Long id, PersonRequestDTO personDTO);
 
     String delete(Long id);
 }

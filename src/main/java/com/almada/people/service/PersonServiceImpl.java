@@ -2,7 +2,11 @@ package com.almada.people.service;
 
 import com.almada.people.dto.request.PersonRequestDTO;
 import com.almada.people.dto.response.PersonResponseDTO;
+import com.almada.people.entity.Person;
 import com.almada.people.repository.PersonRepository;
+import com.almada.people.util.PersonMapper;
+import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -10,44 +14,45 @@ import java.util.List;
 
 @Service
 @Primary
+@RequiredArgsConstructor
 public class PersonServiceImpl implements PersonService {
 
-    private PersonRepository personRepository;
+    private final PersonRepository personRepository;
+    private final PersonMapper personMapper;
 
     @Override
     public PersonResponseDTO findById(long id) {
-        personRepository.findById(id).orElseThrow(()-> new RuntimeException("Person wasn't found on database."));
-        return null;
+        return personMapper.toPersonDTO(returnPerson(id));
     }
 
     @Override
     public List<PersonResponseDTO> findAll() {
-        return List.of();
+        return personMapper.toPeopleDTO(personRepository.findAll());
     }
 
     @Override
-    public PersonResponseDTO register(PersonRequestDTO personRequestDTO) {
-        return "";
+    public PersonResponseDTO register(PersonRequestDTO personDTO) {
+
+        Person person = personMapper.toPerson(personDTO);
+        return personMapper.toPersonDTO(personRepository.save(person));
     }
 
-    @Override
-    public PersonResponseDTO register(PersonResponseDTO personResponseDTO) {
-        return "";
-    }
 
     @Override
-    public PersonResponseDTO update(PersonRequestDTO personRequestDTO, Long id) {
-        personRepository.findById(id).orElseThrow(()-> new RuntimeException("Person wasn't found on database."));
-        return null;
-    }
-
-    @Override
-    public PersonResponseDTO update(PersonRequestDTO personRequestDTO) {
-        return null;
+    public PersonResponseDTO update(Long id, PersonRequestDTO personDTO) {
+        Person person = returnPerson(id);
+        personMapper.updatePersonData(person, personDTO);
+        return personMapper.toPersonDTO(personRepository.save(person));
     }
 
     @Override
     public String delete(Long id) {
-        return "";
+       personRepository.deleteById(id);
+        return "Person with id " + id + " was deleted";
+    }
+
+    private Person returnPerson(Long id) {
+        return personRepository
+                .findById(id).orElseThrow(() -> new RuntimeException("Person wasn't found on database."));
     }
 }
